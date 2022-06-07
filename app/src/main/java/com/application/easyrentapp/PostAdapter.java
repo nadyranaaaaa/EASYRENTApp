@@ -159,7 +159,7 @@ public class PostAdapter {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            TextView alamat, DAERAH, NEGERI, KELENGKAPAN, CATEGORY, MAKLUMAT, DEPOSIT, SEWA, PENDAHULUAN, BILIK, TANDAS;
+            TextView ALAMAT, DAERAH, NEGERI, KELENGKAPAN, CATEGORY, MAKLUMAT, DEPOSIT, SEWA, PENDAHULUAN, BILIK, TANDAS;
             ImageView GambarProgram, Update, Delete;
 
             public ViewHolder(@NonNull View itemView) {
