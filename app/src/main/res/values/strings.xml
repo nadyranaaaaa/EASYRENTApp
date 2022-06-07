@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">EASYRENTApp</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <string-array name="kelengkapan_list">
+        <item>Kelengkapan penuh</item>
+        <item>Kelengkapan separuh</item>
+        <item>Kelengkapan tiada</item>
+    </string-array>
+
+    <string-array name="category_list">
+        <item>Teres</item>
+        <item>Flat</item>
+        <item>Bilik</item>
+    </string-array>
+
+    <string-array name="bilik_list">
+        <item>1 Bilik</item>
+        <item>2 Bilik</item>
+        <item>3 Bilik</item>
+    </string-array>
+    <string-array name="tandas_list">
+        <item>1 tandas</item>
+        <item>2 tandas</item>
+        <item>3 tandas</item>
+        <item>Tandas privasi</item>
+        <item>Tandas kongsi</item>
+
+    </string-array>
+</resources>
