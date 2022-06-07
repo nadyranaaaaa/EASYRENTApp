@@ -10,15 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EASYRENTApp">
         <activity
-            android:name=".NavigationActivity"
-            android:exported="true"
-            android:label="@string/title_activity_navigation" >
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
+            android:name=".MessageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddActivity"
+            android:exported="false" />
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
@@ -27,9 +23,6 @@
             android:exported="false" />
         <activity
             android:name=".RecyclerViewList"
-            android:exported="false" />
-        <activity
-            android:name=".AdsCreateActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

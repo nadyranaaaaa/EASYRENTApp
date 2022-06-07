@@ -6,39 +6,31 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.text.format.DateFormat;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.Calendar;
-
-public class AdsCreateActivity extends AppCompatActivity {
-
-
+public class AddActivity extends AppCompatActivity {
     ImageButton imageButton;
     EditText alamat, daerah, negeri, deposit, sewa, pendahuluan, maklumat;
     Button btnadd,backbtn;
@@ -52,11 +44,13 @@ public class AdsCreateActivity extends AppCompatActivity {
 
     private static final int Gallery_Code =1;
     private Uri imageUri = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ads_create);
+        setContentView(R.layout.activity_add);
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
+
 
         //hooks
         alamat = findViewById(R.id.txtalamat);
@@ -82,29 +76,28 @@ public class AdsCreateActivity extends AppCompatActivity {
 
 
         //spinner uni
-        ArrayAdapter<String> CategoryAdapter = new ArrayAdapter<String>(AdsCreateActivity.this, android.R.layout.simple_list_item_1,
+        ArrayAdapter<String> CategoryAdapter = new ArrayAdapter<String>(AddActivity.this, android.R.layout.simple_list_item_1,
                 getResources().getStringArray(R.array.category_list));
         CategoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(CategoryAdapter);
 
         //spinner uni
-        ArrayAdapter<String> KelengkapanAdapter = new ArrayAdapter<String>(AdsCreateActivity.this, android.R.layout.simple_list_item_1,
+        ArrayAdapter<String> KelengkapanAdapter = new ArrayAdapter<String>(AddActivity.this, android.R.layout.simple_list_item_1,
                 getResources().getStringArray(R.array.kelengkapan_list));
         KelengkapanAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         kelengkapanSpinner.setAdapter(KelengkapanAdapter);
 
         //spinner uni
-        ArrayAdapter<String> BilikAdapter = new ArrayAdapter<String>(AdsCreateActivity.this, android.R.layout.simple_list_item_1,
+        ArrayAdapter<String> BilikAdapter = new ArrayAdapter<String>(AddActivity.this, android.R.layout.simple_list_item_1,
                 getResources().getStringArray(R.array.bilik_list));
         BilikAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         bilikSpinner.setAdapter(BilikAdapter);
 
         //spinner uni
-        ArrayAdapter<String> TandasAdapter = new ArrayAdapter<String>(AdsCreateActivity.this, android.R.layout.simple_list_item_1,
+        ArrayAdapter<String> TandasAdapter = new ArrayAdapter<String>(AddActivity.this, android.R.layout.simple_list_item_1,
                 getResources().getStringArray(R.array.tandas_list));
         TandasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         tandasSpinner.setAdapter(TandasAdapter);
-
 
 
         //image button
@@ -122,7 +115,7 @@ public class AdsCreateActivity extends AppCompatActivity {
         backbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(AdsCreateActivity.this,RecyclerViewList.class);
+                Intent i = new Intent(AddActivity.this,RecyclerViewList.class);
                 startActivity(i);
             }
         });
@@ -170,80 +163,80 @@ public class AdsCreateActivity extends AppCompatActivity {
 
                 //if gambar tidak dipilih
                 if (imageUri == null){
-                    Toast.makeText(AdsCreateActivity.this,"Sila pilih gambar program",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddActivity.this,"Sila pilih gambar program",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 //if ruangan tidak diisi
                 if (TextUtils.isEmpty(Alamat)  ) {
                     alamat.setError("Ruangan ini tidak diisi");
-                    Toast.makeText(AdsCreateActivity.this,"Nama program tidak diisi",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddActivity.this,"Nama program tidak diisi",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 //if ruangan tidak diisi
                 if (TextUtils.isEmpty(Daerah)) {
                     daerah.setError("Ruangan ini tidak diisi");
-                    Toast.makeText(AdsCreateActivity.this,"tidak diisi",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddActivity.this,"tidak diisi",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 //if ruangan tidak diisi
                 if (TextUtils.isEmpty(Negeri)) {
                     negeri.setError("Ruangan ini tidak diisi");
-                    Toast.makeText(AdsCreateActivity.this,"tidak diisi",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddActivity.this,"tidak diisi",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 //if ruangan tidak diisi
                 if (TextUtils.isEmpty(Maklumat)) {
                     maklumat.setError("Ruangan ini tidak diisi");
-                    Toast.makeText(AdsCreateActivity.this,"tidak diisi",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddActivity.this,"tidak diisi",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 //if hari program tk select
                 if(Kelengkapan.equals("Pilih Kelengkapan")){
-                    Toast.makeText(AdsCreateActivity.this,"Sila pilih",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddActivity.this,"Sila pilih",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 //if hari program tk select
                 if(Category.equals("Pilih Jenis Kediaman")){
-                    Toast.makeText(AdsCreateActivity.this,"Sila pilih",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddActivity.this,"Sila pilih",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 //if ruangan tidak diisi
                 if (TextUtils.isEmpty(Deposit)) {
                     deposit.setError("Ruangan ini tidak diisi");
-                    Toast.makeText(AdsCreateActivity.this,"Tarikh program tidak diisi",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddActivity.this,"Tarikh program tidak diisi",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 //if ruangan tidak diisi
                 if (TextUtils.isEmpty(Sewa)) {
                     sewa.setError("Ruangan ini tidak diisi");
-                    Toast.makeText(AdsCreateActivity.this,"Masa Program tidak diisi",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddActivity.this,"Masa Program tidak diisi",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 //if ruangan tidak diisi
                 if (TextUtils.isEmpty(Pendahuluan)) {
                     pendahuluan.setError("Ruangan ini tidak diisi");
-                    Toast.makeText(AdsCreateActivity.this,"Masa Program tidak diisi",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddActivity.this,"Masa Program tidak diisi",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 //if hari program tk select
                 if(Bilik.equals("Pilih Bilik")){
-                    Toast.makeText(AdsCreateActivity.this,"Sila pilih",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddActivity.this,"Sila pilih",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 //if hari program tk select
                 if(Tandas.equals("Pilih tandas")){
-                    Toast.makeText(AdsCreateActivity.this,"Sila pilih",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddActivity.this,"Sila pilih",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -266,7 +259,7 @@ public class AdsCreateActivity extends AppCompatActivity {
                             Task<Uri> downloadUrl = taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Uri> task) {
-                                    Intent intent = new Intent(AdsCreateActivity.this,RecyclerViewList.class);
+                                    Intent intent = new Intent(AddActivity.this,RecyclerViewList.class);
                                     String t =task.getResult().toString();
                                     DatabaseReference newPost = mRef.push();
                                     newPost.child("Alamat").setValue(Alamat);
@@ -283,7 +276,7 @@ public class AdsCreateActivity extends AppCompatActivity {
                                     newPost.child("mImageUrl").setValue(t);
 
                                     mprogress.dismiss();
-                                    Toast.makeText(AdsCreateActivity.this,"Iklan berjaya disimpan",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(AddActivity.this,"Iklan berjaya disimpan",Toast.LENGTH_LONG).show();
                                     startActivity(intent);
                                 }
                             });
@@ -295,4 +288,5 @@ public class AdsCreateActivity extends AppCompatActivity {
 
 
     }
+
 }

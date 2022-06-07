@@ -2,22 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_iklan"
+        android:id="@+id/Iklan"
         android:icon="@drawable/ic_home_black_24dp"
         android:title="Iklan" />
 
     <item
-        android:id="@+id/navigation_add"
+        android:id="@+id/Tambah"
         android:icon="@drawable/ic_add"
         android:title="Tambah" />
 
     <item
-        android:id="@+id/navigation_message"
+        android:id="@+id/Masej"
         android:icon="@drawable/ic_message"
         android:title="Message" />
 
     <item
-        android:id="@+id/navigation_profiles"
+        android:id="@+id/Profil"
         android:icon="@drawable/ic_profile"
         android:title="Profile" />
 
