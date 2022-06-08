@@ -1,292 +1,265 @@
 package com.application.easyrentapp;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
-import android.app.DatePickerDialog;
+import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import com.google.firebase.storage.StorageTask;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
 
 public class AddActivity extends AppCompatActivity {
-    ImageButton imageButton;
-    EditText alamat, daerah, negeri, deposit, sewa, pendahuluan, maklumat;
-    Button btnadd,backbtn;
-    FirebaseDatabase mDatabase;
-    DatabaseReference mRef;
-    StorageReference mStorage;
-    ProgressDialog mprogress;
-    DatePickerDialog.OnDateSetListener setListener;
 
-    Spinner kelengkapanSpinner, categorySpinner, bilikSpinner, tandasSpinner;
+    static final int REQUEST_PICTURE_CAPTURE = 1;
+    private static final int PICK_IMAGE_REQUEST = 1888;
+    private static final int CAMERA_REQUEST = 1888;
+    private static final int MY_CAMERA_PERMISSION_CODE = 100;
+    private boolean is_empty=true;
 
-    private static final int Gallery_Code =1;
-    private Uri imageUri = null;
+    Uri imageUri;
+    String myUrl;
+
+    StorageTask uploadIklan;
+
+    ImageView imageView;
+
+    ImageButton btnchoose;
+    Button btnsave, btnback;
+
+    //Firebase
+    StorageReference storageReference;
+    DatabaseReference databaseReference;
+
+    private EditText alamat, daerah, negeri, maklumat, deposit, sewa, pendahuluan;
+    Spinner category, kelengkapan, bilik, tandas;
+    ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
 
+        storageReference = FirebaseStorage.getInstance().getReference("Images");
+        databaseReference = FirebaseDatabase.getInstance().getReference("Images");
+
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
 
-
-        //hooks
         alamat = findViewById(R.id.txtalamat);
         daerah = findViewById(R.id.txtdaerah);
         negeri = findViewById(R.id.txtnegeri);
-        categorySpinner = findViewById(R.id.txtcategory);
-        kelengkapanSpinner = findViewById(R.id.txtkelengkapan);
+        category = findViewById(R.id.txtcategory);
+        kelengkapan = findViewById(R.id.txtkelengkapan);
         maklumat = findViewById(R.id.txtmaklumat);
-        deposit =findViewById(R.id.txtdeposit);
-        sewa =findViewById(R.id.txtsewa);
-        pendahuluan =findViewById(R.id.txtpendahuluan);
-        bilikSpinner =findViewById(R.id.txtbilik);
-        tandasSpinner =findViewById(R.id.txttandas);
+        deposit = findViewById(R.id.txtdeposit);
+        sewa = findViewById(R.id.txtsewa);
+        pendahuluan = findViewById(R.id.txtpendahuluan);
+        bilik = findViewById(R.id.txtbilik);
+        tandas = findViewById(R.id.txttandas);
+        progressDialog = new ProgressDialog(this);
 
-        mprogress = new ProgressDialog(this);
+        // initialise views
+        btnsave = findViewById(R.id.btnSave);
+        btnback = findViewById(R.id.btnBack);
+        btnchoose = findViewById(R.id.image_added);
+        imageView = findViewById(R.id.imgView);
 
-        //button
-        btnadd = findViewById(R.id.btnsave);
-        backbtn= findViewById(R.id.btncancel);
-        mDatabase = FirebaseDatabase.getInstance();
-        mRef =mDatabase.getReference().child("program");
-        mStorage = FirebaseStorage.getInstance().getReference("Program");
-
-
-        //spinner uni
-        ArrayAdapter<String> CategoryAdapter = new ArrayAdapter<String>(AddActivity.this, android.R.layout.simple_list_item_1,
-                getResources().getStringArray(R.array.category_list));
-        CategoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        categorySpinner.setAdapter(CategoryAdapter);
-
-        //spinner uni
-        ArrayAdapter<String> KelengkapanAdapter = new ArrayAdapter<String>(AddActivity.this, android.R.layout.simple_list_item_1,
-                getResources().getStringArray(R.array.kelengkapan_list));
-        KelengkapanAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        kelengkapanSpinner.setAdapter(KelengkapanAdapter);
-
-        //spinner uni
-        ArrayAdapter<String> BilikAdapter = new ArrayAdapter<String>(AddActivity.this, android.R.layout.simple_list_item_1,
-                getResources().getStringArray(R.array.bilik_list));
-        BilikAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        bilikSpinner.setAdapter(BilikAdapter);
-
-        //spinner uni
-        ArrayAdapter<String> TandasAdapter = new ArrayAdapter<String>(AddActivity.this, android.R.layout.simple_list_item_1,
-                getResources().getStringArray(R.array.tandas_list));
-        TandasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        tandasSpinner.setAdapter(TandasAdapter);
-
-
-        //image button
-        imageButton.setOnClickListener(new View.OnClickListener() {
+        btnback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                startActivityForResult(intent,Gallery_Code);
+                startActivity(new Intent(AddActivity.this, MainActivity.class));
+                finish();
             }
         });
 
-
-        //back btn
-        backbtn.setOnClickListener(new View.OnClickListener() {
+        btnsave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(AddActivity.this,RecyclerViewList.class);
-                startActivity(i);
+                uploadImage();
             }
         });
+
+        btnchoose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                SelectImage();
+            }
+        });
+
     }
 
+    private void SelectImage()
+    {
 
-    //get uri file extension
-    private String GetFileExtension(Uri uri) {
-
-        ContentResolver cR = getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(cR.getType(uri));
+        // Defining Implicit Intent to mobile gallery
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(
+                Intent.createChooser(
+                        intent, "Select Image from here..."), PICK_IMAGE_REQUEST);
     }
 
+    public void uploadImage() {
 
 
-    //pick image in gallery
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Posting");
+        progressDialog.show();
 
-        if (requestCode == Gallery_Code && resultCode == RESULT_OK) {
-            imageUri = data.getData();
-            imageButton.setImageURI(imageUri);
+        if (imageUri != null) {
+            final StorageReference filereference = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
+
+            uploadIklan = filereference.putFile(imageUri);
+            uploadIklan.continueWithTask(new Continuation() {
+                @Override
+                public Object then(@NonNull Task task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    return filereference.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        myUrl = downloadUri.toString();
+
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+
+                        String postid = reference.push().getKey();
+
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        hashMap.put("postid", postid);
+                        hashMap.put("postimage", myUrl);
+                        hashMap.put("alamat", alamat.getText().toString());
+                        hashMap.put("negeri", negeri.getText().toString());
+                        hashMap.put("category", category.getResources().toString());
+                        hashMap.put("daerah", daerah.getText().toString());
+                        hashMap.put("kelengkapan", kelengkapan.getResources().toString());
+                        hashMap.put("maklumat", maklumat.getText().toString());
+                        hashMap.put("deposit", deposit.getText().toString());
+                        hashMap.put("sewa", sewa.getText().toString());
+                        hashMap.put("pendahuluan", pendahuluan.getText().toString());
+                        hashMap.put("bilik", bilik.getResources().toString());
+                        hashMap.put("tandas", tandas.getResources().toString());
+                        hashMap.put("imgView", imageView.getResources().toString());
+
+                        hashMap.put("user", FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+                        reference.child(postid).setValue(hashMap);
+
+                        progressDialog.dismiss();
+
+                        startActivity(new Intent(AddActivity.this, MainActivity.class));
+                        finish();
+                    } else {
+                        Toast.makeText(AddActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(AddActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(this, "No image selected!", Toast.LENGTH_SHORT).show();
         }
 
-
-        //add into firebase
-        btnadd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String Alamat = alamat.getText().toString().trim();
-                final String Daerah = daerah.getText().toString().trim();
-                final String Negeri = negeri.getText().toString().trim();
-                final String Category = categorySpinner.getSelectedItem().toString();
-                final String Kelengkapan = kelengkapanSpinner.getSelectedItem().toString();
-                final String Maklumat = maklumat.getText().toString().trim();
-                final String Deposit = deposit.getText().toString().trim();
-                final String Sewa = sewa.getText().toString().trim();
-                final String Pendahuluan = pendahuluan.getText().toString().trim();
-                final String Bilik = bilikSpinner.getSelectedItem().toString();
-                final String Tandas = tandasSpinner.getSelectedItem().toString();
-
-
-
-                //if gambar tidak dipilih
-                if (imageUri == null){
-                    Toast.makeText(AddActivity.this,"Sila pilih gambar program",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                //if ruangan tidak diisi
-                if (TextUtils.isEmpty(Alamat)  ) {
-                    alamat.setError("Ruangan ini tidak diisi");
-                    Toast.makeText(AddActivity.this,"Nama program tidak diisi",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                //if ruangan tidak diisi
-                if (TextUtils.isEmpty(Daerah)) {
-                    daerah.setError("Ruangan ini tidak diisi");
-                    Toast.makeText(AddActivity.this,"tidak diisi",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                //if ruangan tidak diisi
-                if (TextUtils.isEmpty(Negeri)) {
-                    negeri.setError("Ruangan ini tidak diisi");
-                    Toast.makeText(AddActivity.this,"tidak diisi",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                //if ruangan tidak diisi
-                if (TextUtils.isEmpty(Maklumat)) {
-                    maklumat.setError("Ruangan ini tidak diisi");
-                    Toast.makeText(AddActivity.this,"tidak diisi",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                //if hari program tk select
-                if(Kelengkapan.equals("Pilih Kelengkapan")){
-                    Toast.makeText(AddActivity.this,"Sila pilih",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                //if hari program tk select
-                if(Category.equals("Pilih Jenis Kediaman")){
-                    Toast.makeText(AddActivity.this,"Sila pilih",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                //if ruangan tidak diisi
-                if (TextUtils.isEmpty(Deposit)) {
-                    deposit.setError("Ruangan ini tidak diisi");
-                    Toast.makeText(AddActivity.this,"Tarikh program tidak diisi",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                //if ruangan tidak diisi
-                if (TextUtils.isEmpty(Sewa)) {
-                    sewa.setError("Ruangan ini tidak diisi");
-                    Toast.makeText(AddActivity.this,"Masa Program tidak diisi",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                //if ruangan tidak diisi
-                if (TextUtils.isEmpty(Pendahuluan)) {
-                    pendahuluan.setError("Ruangan ini tidak diisi");
-                    Toast.makeText(AddActivity.this,"Masa Program tidak diisi",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                //if hari program tk select
-                if(Bilik.equals("Pilih Bilik")){
-                    Toast.makeText(AddActivity.this,"Sila pilih",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                //if hari program tk select
-                if(Tandas.equals("Pilih tandas")){
-                    Toast.makeText(AddActivity.this,"Sila pilih",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-
-                //if ruangan sudah diisi
-                if(!Alamat.isEmpty() && !Daerah.isEmpty() && !Negeri.isEmpty() && !Kelengkapan.isEmpty()
-                        && !Category.isEmpty() && !Deposit.isEmpty() && !Sewa.isEmpty()
-                        && !Pendahuluan.isEmpty() && !Bilik.isEmpty() && !Tandas.isEmpty()
-                        && imageUri!= null )
-                {
-                    mprogress.setMessage("Sedang dimuatnaik..");
-                    mprogress.show();
-
-                    StorageReference filepath = mStorage.child(System.currentTimeMillis() + "." +
-                            GetFileExtension(imageUri));
-                    filepath.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                            Task<Uri> downloadUrl = taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Uri> task) {
-                                    Intent intent = new Intent(AddActivity.this,RecyclerViewList.class);
-                                    String t =task.getResult().toString();
-                                    DatabaseReference newPost = mRef.push();
-                                    newPost.child("Alamat").setValue(Alamat);
-                                    newPost.child("Daerah").setValue(Daerah);
-                                    newPost.child("Negeri").setValue(Negeri);
-                                    newPost.child("Kelengkapan").setValue(Kelengkapan);
-                                    newPost.child("Kategori").setValue(Category);
-                                    newPost.child("Maklumat").setValue(Maklumat);
-                                    newPost.child("Deposit").setValue(Deposit);
-                                    newPost.child("Sewa").setValue(Sewa);
-                                    newPost.child("Pendahuluan").setValue(Pendahuluan);
-                                    newPost.child("Bilik").setValue(Bilik);
-                                    newPost.child("Tandas").setValue(Tandas);
-                                    newPost.child("mImageUrl").setValue(t);
-
-                                    mprogress.dismiss();
-                                    Toast.makeText(AddActivity.this,"Iklan berjaya disimpan",Toast.LENGTH_LONG).show();
-                                    startActivity(intent);
-                                }
-                            });
-                        }
-                    });
-                }
-            }
-        });
-
-
     }
 
+    private String getFileExtension(Uri uri) {
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+
+        return mime.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_CAMERA_PERMISSION_CODE)
+        {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            }
+            else
+            {
+                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // checking request code and result code
+        // if request code is PICK_IMAGE_REQUEST and
+        // resultCode is RESULT_OK
+        // then set image in the image view
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            // Get the Uri of data
+            imageUri = data.getData();
+            try {
+
+                // Setting image on image view using Bitmap
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                imageView.setImageBitmap(bitmap);
+            }
+
+            catch (IOException e) {
+                // Log the exception
+                e.printStackTrace();
+            }
+        }
+    }
+    
 }

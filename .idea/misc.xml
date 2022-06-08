@@ -9,13 +9,16 @@
         <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.1165" />
         <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.1165" />
         <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.1165" />
-        <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/layout/activity_add.xml" value="0.17552083333333332" />
+        <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/layout/activity_add.xml" value="0.1" />
+        <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/layout/activity_add_iklan.xml" value="0.1" />
         <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/layout/activity_ads_create.xml" value="0.16568047337278108" />
+        <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/layout/activity_login.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/layout/activity_main.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/layout/activity_message.xml" value="0.1" />
         <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/layout/activity_navigation.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/layout/activity_profile.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/layout/activity_recycler_view_list.xml" value="0.17552083333333332" />
+        <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/layout/activity_sign_in.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/layout/activity_tambah_iklan.xml" value="0.1" />
         <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/layout/content.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/layout/content_main.xml" value="0.17552083333333332" />
@@ -28,6 +31,8 @@
         <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/layout/fragment_profile.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/layout/fragment_second.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/layout/home_fragment.xml" value="0.17552083333333332" />
+        <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/layout/list_message.xml" value="0.17083333333333334" />
+        <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/layout/list_msg.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/menu/menu_main.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/nakyl/EASYRENTApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />

@@ -18,31 +18,44 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/layout_button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="vertical">
+                android:layout_height="60dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
+                <!--Button for choosing image from gallery-->
 
                 <ImageButton
-                    android:id="@+id/btn_imageProgram"
-                    android:layout_width="214dp"
-                    android:layout_height="98dp"
-                    android:layout_centerHorizontal="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_marginTop="10dp"
-                    android:adjustViewBounds="true"
-                    android:background="@color/white"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_add"
-                    android:text="+" />
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_add_photo"
+                    android:id="@+id/image_added"/>
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="Uploaded Prescription"
+                    android:scaleType="fitXY" />
+
+
             </LinearLayout>
+
+            <!--Image View for showing image chosen from gallery-->
+            <ImageView
+                android:id="@+id/imgView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
             <ProgressBar
                 android:id="@+id/progress_bar"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="5dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:indeterminate="true"
                 android:visibility="invisible" />
@@ -57,7 +70,7 @@
                     android:id="@+id/txtalamat"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:layout_margin="8dp"
+                    android:layout_marginLeft="8dp"
                     android:layout_marginRight="3dp"
                     android:background="@drawable/rounded_edittext"
                     android:clickable="false"
@@ -65,8 +78,6 @@
                     android:ems="10"
                     android:gravity="start|center"
                     android:hint="Alamat rumah"
-
-                    android:inputType="number"
                     android:padding="10dp"
                     android:textColor="@color/black"
                     android:textColorHint="#6B6B6B"
@@ -97,7 +108,6 @@
                         android:ems="10"
                         android:gravity="start|center"
                         android:hint="Daerah"
-                        android:inputType="number"
                         android:padding="10dp"
                         android:textColor="@color/black"
                         android:textColorHint="#6B6B6B"
@@ -122,7 +132,6 @@
                         android:ems="10"
                         android:gravity="start|center"
                         android:hint="Negeri"
-                        android:inputType="number"
                         android:padding="10dp"
                         android:textColor="@color/black"
                         android:textColorHint="#6B6B6B"
@@ -173,7 +182,7 @@
                 <EditText
                     android:id="@+id/txtmaklumat"
                     android:layout_width="match_parent"
-                    android:layout_height="90dp"
+                    android:layout_height="45dp"
                     android:layout_marginHorizontal="8dp"
                     android:layout_marginBottom="5dp"
                     android:background="@drawable/rounded_edittext"
@@ -183,7 +192,6 @@
                     android:inputType="textMultiLine|textPersonName"
                     android:lines="2"
                     android:padding="10dp"
-                    android:text=""
                     android:textColorHint="#6B6B6B"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -309,44 +317,33 @@
                         android:focusable="false" />
 
                 </LinearLayout>
-
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="160dp"
+                android:layout_height="40dp"
+                android:layout_margin="8dp"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:text="CIPTA"
+                android:textColor="#FAF6F6"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                app:cornerRadius="10dp"
+                app:elevation="3dp" />
 
-
-                <Button
-                    android:id="@+id/btnsave"
-                    android:layout_width="160dp"
-                    android:layout_height="40dp"
-                    android:layout_margin="8dp"
-                    android:gravity="center"
-                    android:text="CIPTA"
-                    android:textColor="#FAF6F6"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    app:cornerRadius="10dp"
-                    app:elevation="3dp" />
-
-                <Button
-                    android:id="@+id/btncancel"
-                    android:layout_width="160dp"
-                    android:layout_height="40dp"
-                    android:layout_margin="8dp"
-                    android:gravity="center"
-                    android:text="BATAL"
-                    android:textColor="#FAF6F6"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    app:cornerRadius="10dp"
-                    app:elevation="3dp" />
-
-            </LinearLayout>
+            <Button
+                android:id="@+id/btnBack"
+                android:layout_width="160dp"
+                android:layout_height="40dp"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:text="BATAL"
+                android:textColor="#FAF6F6"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                app:cornerRadius="10dp"
+                app:elevation="3dp" />
 
         </LinearLayout>
     </ScrollView>
