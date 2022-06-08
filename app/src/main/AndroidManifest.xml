@@ -17,9 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EASYRENTApp">
         <activity
-            android:name=".SignInActivity"
-            android:exported="false" />
-        <activity
             android:name=".MessageActivity"
             android:exported="false" />
         <activity
@@ -39,10 +36,7 @@
             android:name=".ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RecyclerViewList"
+            android:name=".ListIklanActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
