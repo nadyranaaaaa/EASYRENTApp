@@ -47,7 +47,6 @@ import java.util.HashMap;
 
 public class AddActivity extends AppCompatActivity {
 
-    static final int REQUEST_PICTURE_CAPTURE = 1;
     private static final int PICK_IMAGE_REQUEST = 1888;
     private static final int CAMERA_REQUEST = 1888;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
@@ -55,17 +54,14 @@ public class AddActivity extends AppCompatActivity {
 
     Uri imageUri;
     String myUrl;
-
     StorageTask uploadIklan;
-
     ImageView imageView;
-
     ImageButton btnchoose;
-    Button btnsave, btnback;
+    Button btnupload, btnback;
 
     //Firebase
+    FirebaseStorage firebaseStorage;
     StorageReference storageReference;
-    DatabaseReference databaseReference;
 
     private EditText alamat, daerah, negeri, maklumat, deposit, sewa, pendahuluan;
     Spinner category, kelengkapan, bilik, tandas;
@@ -76,8 +72,8 @@ public class AddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
 
-        storageReference = FirebaseStorage.getInstance().getReference("Images");
-        databaseReference = FirebaseDatabase.getInstance().getReference("Images");
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference();
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
 
@@ -95,10 +91,9 @@ public class AddActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
 
         // initialise views
-        btnsave = findViewById(R.id.btnSave);
+        btnupload = findViewById(R.id.btnSave);
         btnback = findViewById(R.id.btnBack);
         btnchoose = findViewById(R.id.image_added);
-        imageView = findViewById(R.id.imgView);
 
         btnback.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,7 +103,7 @@ public class AddActivity extends AppCompatActivity {
             }
         });
 
-        btnsave.setOnClickListener(new View.OnClickListener() {
+        btnupload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 uploadImage();
@@ -119,27 +114,50 @@ public class AddActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                SelectImage();
+                chooseImage();
             }
         });
 
     }
 
-    private void SelectImage()
+    private void chooseImage()
     {
-
         // Defining Implicit Intent to mobile gallery
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(
-                Intent.createChooser(
-                        intent, "Select Image from here..."), PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "Sila pilih gambar..."), PICK_IMAGE_REQUEST);
     }
 
-    public void uploadImage() {
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        // checking request code and result code
+        // if request code is PICK_IMAGE_REQUEST and
+        // resultCode is RESULT_OK
+        // then set image in the image view
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            // Get the Uri of data
+            imageUri = data.getData();
+            try {
+
+                // Setting image on image view using Bitmap
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                imageView.setImageBitmap(bitmap);
+            }
+
+            catch (IOException e) {
+                // Log the exception
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void uploadImage()
+    {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Posting");
         progressDialog.show();
@@ -164,7 +182,7 @@ public class AddActivity extends AppCompatActivity {
                         Uri downloadUri = task.getResult();
                         myUrl = downloadUri.toString();
 
-                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Iklan");
 
                         String postid = reference.push().getKey();
 
@@ -183,7 +201,6 @@ public class AddActivity extends AppCompatActivity {
                         hashMap.put("bilik", bilik.getResources().toString());
                         hashMap.put("tandas", tandas.getResources().toString());
                         hashMap.put("imgView", imageView.getResources().toString());
-
                         hashMap.put("user", FirebaseAuth.getInstance().getCurrentUser().getUid());
 
                         reference.child(postid).setValue(hashMap);
@@ -230,34 +247,6 @@ public class AddActivity extends AppCompatActivity {
             else
             {
                 Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // checking request code and result code
-        // if request code is PICK_IMAGE_REQUEST and
-        // resultCode is RESULT_OK
-        // then set image in the image view
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-
-            // Get the Uri of data
-            imageUri = data.getData();
-            try {
-
-                // Setting image on image view using Bitmap
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                imageView.setImageBitmap(bitmap);
-            }
-
-            catch (IOException e) {
-                // Log the exception
-                e.printStackTrace();
             }
         }
     }

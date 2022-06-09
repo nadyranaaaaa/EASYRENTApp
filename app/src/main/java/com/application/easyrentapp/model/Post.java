@@ -2,53 +2,74 @@ package com.application.easyrentapp.model;
 
 import com.google.firebase.firestore.DocumentId;
 
-public class Iklan {
+public class Post {
 
     @DocumentId
+    private String postid;
     private String alamat;
     private String daerah;
     private String negeri;
     private String category;
     private String kelengkapan;
-    private String maklumat;
+    private String description;
     private String deposit;
     private String sewa;
     private String pendahuluan;
     private String bilik;
     private String tandas;
-    private String gambar;
+    private String postimage;
+    private String publisher;
 
 
-    public Iklan() {
+
+    public Post() {
     }
 
-    public Iklan(String alamat,
-                 String daerah,
-                 String negeri,
-                 String category,
-                 String kelengkapan,
-                 String maklumat,
-                 String deposit,
-                 String sewa,
-                 String pendahuluan,
-                 String bilik,
-                 String tandas,
-                 String gambar) {
-
+    public Post(String postid,
+                String alamat,
+                String daerah,
+                String negeri,
+                String category,
+                String kelengkapan,
+                String description,
+                String deposit,
+                String sewa,
+                String pendahuluan,
+                String bilik,
+                String tandas,
+                String postimage, String publisher) {
+        this.postid = postid;
         this.alamat = alamat;
         this.daerah = daerah;
         this.negeri = negeri;
         this.category = category;
         this.kelengkapan = kelengkapan;
-        this.maklumat = maklumat;
+        this.description = description;
         this.deposit = deposit;
         this.sewa = sewa;
         this.pendahuluan = pendahuluan;
         this.bilik = bilik;
         this.tandas = tandas;
-        this.gambar = gambar;
+        this.postimage = postimage;
+        this.publisher = publisher;
+
     }
 
+    public String getPostid() {
+        return postid;
+    }
+
+    public void setPostid(String postid) {
+        this.postid = postid;
+    }
+
+    public String getPostimage() { return postimage; }
+
+    public void setPostimage(String postimage) { this.postimage = postimage; }
+
+    public String getPublisher() { return publisher; }
+
+    public void setPublisher(String publisher) { this.publisher = publisher; }
 
     public String getAlamat() {
         return alamat;
@@ -90,13 +111,9 @@ public class Iklan {
         this.kelengkapan = kelengkapan;
     }
 
-    public String getMaklumat() {
-        return maklumat;
-    }
+    public String getDescription() { return description; }
 
-    public void setMaklumat(String maklumat) {
-        this.maklumat = maklumat;
-    }
+    public void setDescription(String description) { this.description = description; }
 
     public String getDeposit() {
         return deposit;
@@ -138,12 +155,5 @@ public class Iklan {
         this.tandas = tandas;
     }
 
-    public String getGambar() {
-        return gambar;
-    }
-
-    public void setGambar(String gambar) {
-        this.gambar = gambar;
-    }
 }
 

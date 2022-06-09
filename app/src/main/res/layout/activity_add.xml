@@ -17,33 +17,21 @@
             android:layout_margin="7dp"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/layout_button"
+            <!--Button for choosing image from gallery-->
+            <ImageButton
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_add_photo"
+                android:id="@+id/image_added"/>
 
-                <!--Button for choosing image from gallery-->
-
-                <ImageButton
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_add_photo"
-                    android:id="@+id/image_added"/>
-
-                <ImageView
-                    android:id="@+id/imageView1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="Uploaded Prescription"
-                    android:scaleType="fitXY" />
-
-
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="Uploaded Prescription"
+                android:scaleType="fitXY" />
 
             <!--Image View for showing image chosen from gallery-->
             <ImageView
@@ -174,11 +162,6 @@
             </LinearLayout>
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
                 <EditText
                     android:id="@+id/txtmaklumat"
                     android:layout_width="match_parent"
@@ -194,7 +177,6 @@
                     android:padding="10dp"
                     android:textColorHint="#6B6B6B"
                     android:textSize="16sp" />
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -256,13 +238,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:orientation="horizontal">
-
                 <EditText
                     android:id="@+id/txtsewa"
                     android:layout_width="match_parent"
@@ -278,9 +253,6 @@
                     android:textColor="@color/black"
                     android:textColorHint="#6B6B6B"
                     android:textSize="15dp" />
-
-
-            </LinearLayout>
 
 
             <LinearLayout

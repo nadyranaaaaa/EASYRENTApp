@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ListIklanActivity extends AppCompatActivity {
+public class PostActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     LinearLayoutManager mLinearLayoutManager;
     Button addbtn, backbtn;
@@ -15,7 +15,7 @@ public class ListIklanActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_iklan);
+        setContentView(R.layout.activity_post);
 
     }
 }
